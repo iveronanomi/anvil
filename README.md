@@ -32,6 +32,10 @@ Item{Key:"Test.digits.Float32", Value:0.32}
 Item{Key:"Test.digits.Float64", Value:-0.64}
 ```
 
+### Example: As package static call
+```go
+items, _ := anvil.Notation(v, anvil.Skip, ".")
+```
 <details><summary>Full example</summary>
 <p>
 
@@ -121,29 +125,10 @@ func main() {
 	}
 }
 ```
-```go
-Item{Key:"Test.Embedded.Boolean", Value:true}
-Item{Key:"Test.unexported", Value:"string_val"}
-Item{Key:"Test.json_tag", Value:1}
-Item{Key:"Test.digits.Int8", Value:-1}
-Item{Key:"Test.digits.Int16", Value:-16}
-Item{Key:"Test.digits.Int32", Value:-32}
-Item{Key:"Test.digits.Int64", Value:-64}
-Item{Key:"Test.digits.Uint8", Value:0x8}
-Item{Key:"Test.digits.Uint16", Value:0x10}
-Item{Key:"Test.digits.Uint32", Value:0x20}
-Item{Key:"Test.digits.Uint64", Value:0x40}
-Item{Key:"Test.digits.Float32", Value:0.32}
-Item{Key:"Test.digits.Float64", Value:-0.64}
-```
 
 </p>
 </details>
 
-### Example: As package static call
-```go
-items, _ := anvil.Notation(v, anvil.Skip, ".")
-```
 ```go
 Item{Key:"Test.Embedded.Boolean", Value:true}
 Item{Key:"Test.unexported", Value:"string_val"}
