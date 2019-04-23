@@ -5,6 +5,16 @@
 - [Modifier usage](#modifier-usage)
 - [TODO List](#todo)
 
+What is going on here?
+Two main params used to make a notation from a type:
+- `Glue` as glue for notation
+- `Mode` as a mode for skipping empty values of a type.
+	- `anvil.Skip` - skip empty values of type
+	- `anvil.NoSkip` - do not skip empty values
+	
+In case if field of structure have a json tag name,
+this tag used as a name for a field in notation
+
 ## Usage
 ### Usage: As an `anvil` instance
 ```go
@@ -146,6 +156,10 @@ Item{Key:"Test.digits.Float64", Value:-0.64}
 ```
 
 ## Modifier usage
+It's a way how to represent a type in dot notation.
+With complicated types (as `time.Time` in the example)
+we interested in real value, not a full notation of type `time.Time`, modifiers will help with that.
+
 ```go
 package main
 
