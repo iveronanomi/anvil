@@ -190,3 +190,4 @@ Item{Key:"Time", Value:"2019-04-23T10:44:56.534221+03:00"}
 ### TODO
 - [ ] add modifiers executions for all types
 - [ ] optimize types itteration
+- [ ] support all built-in types
