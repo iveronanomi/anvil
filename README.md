@@ -1,12 +1,12 @@
 # Anvil - Dot notation from Go type instance
 - [Usage](#usage)
-  - [As an anvil instance](#example-as-an-anvil-instance)
-  - [As package static call](#example-as-package-static-call)
+  - [As an anvil instance](#usage-as-an-anvil-instance)
+  - [As package static call](#usage-as-package-static-call)
 - [Modifier usage](#modifier-usage)
 - [TODO List](#todo)
 
 ## Usage
-### Example: As an `anvil` instance
+### Usage: As an `anvil` instance
 ```go
 do := anvil.Anvil{Mode:anvil.NoSkip, Glue:"."}
 items, _ := do.Notation(v)
@@ -32,7 +32,7 @@ Item{Key:"Test.digits.Float32", Value:0.32}
 Item{Key:"Test.digits.Float64", Value:-0.64}
 ```
 
-### Example: As package static call
+### Usage: As package static call
 ```go
 items, _ := anvil.Notation(v, anvil.Skip, ".")
 ```
@@ -157,14 +157,8 @@ import (
 	"github.com/iveronanomi/anvil/modifier"
 )
 
-type (
-	MyStruct struct {
-		Field time.Time
-	}
-)
-
 func main() {
-	v := MyStruct{Field:time.Now()}
+	v := time.Now()
 
 	do := anvil.Anvil{Mode:anvil.NoSkip, Glue:"."}
 	do.Modifier(time.Now(), modifier.Time)
@@ -174,10 +168,9 @@ func main() {
 		fmt.Printf("\n%#v", items[i])
 	}
 }
-
 ```
 ```go
-Item{Key:"MyStruct.Field", Value:"2019-04-22T17:50:27.194752+03:00"}
+Item{Key:"Time", Value:"2019-04-23T10:44:56.534221+03:00"}
 ```
 
 ### TODO
