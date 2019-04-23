@@ -191,3 +191,27 @@ Item{Key:"Time", Value:"2019-04-23T10:44:56.534221+03:00"}
 - [ ] add modifiers executions for all types
 - [ ] optimize types itteration
 - [ ] support all built-in types
+- - [x] Array
+- - [x] Slice
+- - [x] Struct
+- - [x] Int
+- - [x] Int8
+- - [x] Int16
+- - [x] Int32
+- - [x] Int64
+- - [x] Float32
+- - [x] Float64
+- - [x] Uint
+- - [x] Uint8
+- - [x] Uint16
+- - [x] Uint32
+- - [x] Uint64
+- - [x] Bool
+- - [x] String
+- - [ ] Interface
+- - [ ] Complex64
+- - [ ] Complex128
+- - [ ] Uintptr
+- - [ ] Map
+- - [ ] Ptr
+- - [ ] UnsafePointer
