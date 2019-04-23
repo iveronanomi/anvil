@@ -12,7 +12,7 @@ var trash interface{}
 
 func BenchmarkNotation_WithNoSkip(b *testing.B) {
 	var r interface{}
-	v := Test{}
+	v := MyType{}
 	a := Anvil{Mode: NoSkip, Glue: "."}
 	a.Modifier(v, modifier.Time)
 
@@ -25,7 +25,7 @@ func BenchmarkNotation_WithNoSkip(b *testing.B) {
 
 func BenchmarkNotation_WithForceSkip(b *testing.B) {
 	var r interface{}
-	v := Test{}
+	v := MyType{}
 	a := &Anvil{Mode: NoSkip, Glue: "."}
 	a.Modifier(v, modifier.Time)
 
