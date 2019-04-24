@@ -9,42 +9,82 @@ import (
 )
 
 func Test_TimeMod(t *testing.T) {
-	expected := "2019-04-22T15:49:32.556091+03:00"
-	tm, _ := time.Parse(time.RFC3339Nano, expected)
+	expectedVal := "2019-04-22T15:49:32.556091+03:00"
+	tm, _ := time.Parse(time.RFC3339Nano, expectedVal)
 	v := reflect.ValueOf(tm)
 
 	val, empty, err := Time(v)
 
 	if err != nil {
 		t.Error(err)
-		t.FailNow()
 	}
 	if empty {
 		t.Error("`empty` must be `false`")
+	}
+	if val.(string) != expectedVal {
+		t.Errorf("`time` must be equal with %v", val)
+	}
+	if t.Failed() {
 		t.FailNow()
 	}
-	if val.(string) != expected {
-		t.Errorf("`time` must be equal with %v", val)
+}
+
+func Test_TimeMod_WithZeroTime(t *testing.T) {
+	expectedVal := "0001-01-01T00:00:00Z"
+	v := reflect.ValueOf(time.Time{})
+
+	val, empty, err := Time(v)
+
+	if err != nil {
+		t.Errorf("`err` must be a <nil>, occured `%v`", err)
+	}
+	if val != expectedVal {
+		t.Errorf("`val` must be `%v` for zero time value", expectedVal)
+	}
+	if !empty {
+		t.Error("`empty` must be `true` for zero time value")
+	}
+	if t.Failed() {
 		t.FailNow()
 	}
 }
 
 func Test_UUIDMod(t *testing.T) {
-	expected := "6354e816-551d-11e9-92ee-acde48001122"
-	v := reflect.ValueOf(uuid.MustParse(expected))
+	expectedVal := "6354e816-551d-11e9-92ee-acde48001122"
+	v := reflect.ValueOf(uuid.MustParse(expectedVal))
 
 	val, empty, err := UUID(v)
 
 	if err != nil {
-		t.Error(err)
-		t.FailNow()
+		t.Errorf("`err` must be <nil>, not %v", err)
 	}
 	if empty {
-		t.Error("`empty` must be `false`")
+		t.Errorf("`empty` must be `false`, not %v", empty)
+	}
+	if val.(string) != expectedVal {
+		t.Errorf("`val` must be equal to `%v` not `%v`", expectedVal, val)
+	}
+	if t.Failed() {
 		t.FailNow()
 	}
-	if val.(string) != expected {
-		t.Errorf("`val` must be equal with %v", val)
+}
+
+func Test_UUIDMod_WithZeroVal(t *testing.T) {
+	expectedVal := "00000000-0000-0000-0000-000000000000"
+	v := reflect.ValueOf(uuid.UUID{})
+
+	val, empty, err := UUID(v)
+
+	if err != nil {
+		t.Errorf("`err` must be <nil>, not %v", err)
+	}
+	if !empty {
+		t.Errorf("`empty` must be `true`, not `%v`", empty)
+	}
+	if val.(string) != expectedVal {
+		t.Errorf("`val` must be equal to `%v` not `%v`", expectedVal, val)
+	}
+	if t.Failed() {
 		t.FailNow()
 	}
 }

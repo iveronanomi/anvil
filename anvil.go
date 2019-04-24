@@ -9,7 +9,7 @@ import (
 )
 
 type (
-	// mode of skipping empty values
+	// mode of (non-)skipping empty values
 	mode int
 	// Anvil executor structure
 	Anvil struct {
@@ -60,6 +60,9 @@ func (s *Anvil) Modifier(t interface{}, call func(f reflect.Value) (interface{},
 // Notation structure as a plain list of [][]interface{}
 // where k(string) = v(typed interface)
 func Notation(sample interface{}, behaviour mode, glue string) ([]Item, error) {
+	if sample == nil {
+		return nil, nil
+	}
 	s := &Anvil{
 		sample:   sample,
 		Glue:     glue,
@@ -72,6 +75,9 @@ func Notation(sample interface{}, behaviour mode, glue string) ([]Item, error) {
 // Notation make a notation of sample structure
 // with fields glued by separator in one row
 func (s *Anvil) Notation(sample interface{}) ([]Item, error) {
+	if sample == nil {
+		return nil, nil
+	}
 	return s.notation("", reflect.ValueOf(sample), false)
 }
 
