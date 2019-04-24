@@ -1,9 +1,10 @@
+[![Build Status](https://travis-ci.org/iveronanomi/anvil.svg?branch=master)](https://travis-ci.org/iveronanomi/anvil) [![Coverage Status](https://coveralls.io/repos/github/iveronanomi/anvil/badge.svg)](https://coveralls.io/github/iveronanomi/anvil)
+
 # Anvil - Dot notation from Go type instance
 - [Usage](#usage)
   - [As an anvil instance](#usage-as-an-anvil-instance)
   - [As package static call](#usage-as-package-static-call)
 - [Modifier usage](#modifier-usage)
-- [TODO List](#todo)
 
 What is going on here?
 Two main params used to make a notation from a type:
@@ -186,31 +187,30 @@ func main() {
 Item{Key:"Time", Value:"2019-04-23T10:44:56.534221+03:00"}
 ```
 
-### TODO
-- [ ] add modifiers executions for all types
-- [ ] optimize types itteration
-- [ ] support all built-in types
-- - [x] Array
-- - [x] Slice
-- - [x] Struct
-- - [x] Int
-- - [x] Int8
-- - [x] Int16
-- - [x] Int32
-- - [x] Int64
-- - [x] Float32
-- - [x] Float64
-- - [x] Uint
-- - [x] Uint8
-- - [x] Uint16
-- - [x] Uint32
-- - [x] Uint64
-- - [x] Bool
-- - [x] String
-- - [ ] Interface
-- - [ ] Complex64
-- - [ ] Complex128
-- - [ ] Uintptr
-- - [ ] Map
-- - [ ] Ptr
-- - [ ] UnsafePointer
+### Features availability
+|Type|Supported|Modifiers call|
+|---:|:---:|:---:|
+|`Array`|+|+|
+|`Slice`|+|-|
+|`Struct`|+|+|
+|`Int`|+|-|
+|`Int8`|+|-|
+|`Int16`|+|-|
+|`Int32`|+|-|
+|`Int64`|+|-|
+|`Float32`|+|-|
+|`Float64`|+|-|
+|`Uint`|+|-|
+|`Uint8`|+|-|
+|`Uint16`|+|-|
+|`Uint32`|+|-|
+|`Uint64`|+|-|
+|`Bool`|+|-|
+|`String`|+|-|
+|`Interface`|-|-|
+|`Complex64`|-|-|
+|`Complex128`|-|-|
+|`Uintptr`|-|-|
+|`Map`|-|-|
+|`Ptr`|-|-|
+|`UnsafePointer`|-|-|

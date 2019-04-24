@@ -8,6 +8,7 @@ before_install:
   - go get github.com/modocache/gover
   - go get github.com/mattn/goveralls
 script:
-  - go test -v -race ./...
+  - go test -v -covermode=count -coverprofile=coverage.out ./...
+  - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
   - gover
   - goveralls -coverprofile gover.coverprofile -service travis-ci
