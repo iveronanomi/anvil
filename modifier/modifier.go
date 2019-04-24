@@ -18,13 +18,13 @@ var (
 		if m, ok := v.Type().MethodByName("ID"); ok && m.Func.Type().NumIn() == 1 {
 			empty = m.Func.Call([]reflect.Value{v})[0].Uint() < 1
 		} else {
-			return value, empty, errors.New("modifier:method `ID` not implemented")
+			return value, true, errors.New("modifier:method ID not implemented")
 		}
 		// get uuid string value
 		if m, ok := v.Type().MethodByName("String"); ok && m.Func.Type().NumIn() == 1 {
 			value = m.Func.Call([]reflect.Value{v})[0].String()
 		} else {
-			err = errors.New("modifier:method `String` not implemented")
+			err, empty = errors.New("modifier:method String not implemented"), true
 		}
 		return value, empty, err
 	}
@@ -40,12 +40,12 @@ var (
 		if m, ok := v.Type().MethodByName("IsZero"); ok && m.Func.Type().NumIn() == 1 {
 			empty = m.Func.Call([]reflect.Value{v})[0].Bool()
 		} else {
-			return value, empty, errors.New("modifier:method `IsZero` not implemented")
+			return value, true, errors.New("modifier:method IsZero not implemented")
 		}
 		if m, ok := v.Type().MethodByName("Format"); ok && m.Func.Type().NumIn() == 2 {
 			value = m.Func.Call([]reflect.Value{v, reflect.ValueOf(layout)})[0].String()
 		} else {
-			return value, empty, errors.New("modifier:method `Format` not implemented")
+			return value, true, errors.New("modifier:method Format not implemented")
 		}
 		return value, empty, err
 	}

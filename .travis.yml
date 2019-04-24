@@ -1,0 +1,13 @@
+language: go
+sudo: false
+go:
+  - 1.12
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+before_install:
+  - go get github.com/modocache/gover
+  - go get github.com/mattn/goveralls
+script:
+  - go test -v -race ./...
+  - gover
+  - goveralls -coverprofile gover.coverprofile -service travis-ci

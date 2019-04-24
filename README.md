@@ -5,6 +5,15 @@
 - [Modifier usage](#modifier-usage)
 - [TODO List](#todo)
 
+What is going on here?
+Two main params used to make a notation from a type:
+- `Glue` as glue for notation
+- `Mode` as a mode for skipping empty values of a type.
+	- `anvil.Skip` - skip empty values of type
+	- `anvil.NoSkip` - do not skip empty values
+
+In case of structure field have a `json` tag name - tag used as a name for a field in notation
+
 ## Usage
 ### Usage: As an `anvil` instance
 ```go
@@ -146,6 +155,10 @@ Item{Key:"Test.digits.Float64", Value:-0.64}
 ```
 
 ## Modifier usage
+It's a way how to represent a type in dot notation.
+With complicated types (as `time.Time` in the example)
+we interested in real value, not a full notation of type `time.Time`, modifiers will help with that.
+
 ```go
 package main
 
@@ -176,3 +189,28 @@ Item{Key:"Time", Value:"2019-04-23T10:44:56.534221+03:00"}
 ### TODO
 - [ ] add modifiers executions for all types
 - [ ] optimize types itteration
+- [ ] support all built-in types
+- - [x] Array
+- - [x] Slice
+- - [x] Struct
+- - [x] Int
+- - [x] Int8
+- - [x] Int16
+- - [x] Int32
+- - [x] Int64
+- - [x] Float32
+- - [x] Float64
+- - [x] Uint
+- - [x] Uint8
+- - [x] Uint16
+- - [x] Uint32
+- - [x] Uint64
+- - [x] Bool
+- - [x] String
+- - [ ] Interface
+- - [ ] Complex64
+- - [ ] Complex128
+- - [ ] Uintptr
+- - [ ] Map
+- - [ ] Ptr
+- - [ ] UnsafePointer
