@@ -135,7 +135,7 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 		}
 		for i := 0; i < v.Len(); i++ {
 			if v.Index(i).CanAddr() {
-				n, err := s.notation(slicePrefix(key, i), v.Index(i).Addr(), true)
+				n, err := s.notation(slicePrefix(key, i), reflect.Indirect(v.Index(i).Addr()), true)
 				if err != nil {
 					return nil, err
 				}
@@ -159,8 +159,7 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 			if f.Kind() == reflect.Invalid {
 				continue
 			}
-			//log.Printf("field:v.Type().Field(%d).Name=%s key=%s\n",i, v.Type().Field(i).Name, s.key(key, v.Type().Field(i),false))
-			n, err := s.notation(s.key(key, v.Type().Field(i), false), v.Field(i), true)
+			n, err := s.notation(s.key(key, v.Type().Field(i), false), f, true)
 			if err != nil {
 				return nil, err
 			}
