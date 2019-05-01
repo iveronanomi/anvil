@@ -39,10 +39,10 @@ type (
 )
 
 const (
-	// NoSkip fields with empty values
-	NoSkip mode = iota
-	// Skip fields with empty values
-	Skip
+	// NoSkipEmpty fields with empty values
+	NoSkipEmpty mode = iota
+	// SkipEmpty fields with empty values
+	SkipEmpty
 )
 
 // Modifier add function executor to extract value given type as
@@ -111,7 +111,7 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 	var (
 		value interface{}
 		empty = true
-		skip  = s.Mode == Skip
+		skip  = s.Mode == SkipEmpty
 	)
 	// get value by pointer if it is
 	v = reflect.Indirect(v)
@@ -135,16 +135,14 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 			break
 		}
 		for i := 0; i < v.Len(); i++ {
-			if v.Index(i).CanAddr() {
-				n, err := s.notation(slicePrefix(key, i), v.Index(i).Addr(), true)
-				if err != nil {
-					return nil, err
-				}
-				if len(n) < 1 {
-					continue
-				}
-				items = append(items, n...)
+			n, err := s.notation(slicePrefix(key, i), v.Index(i), true)
+			if err != nil {
+				return nil, err
 			}
+			if len(n) < 1 {
+				continue
+			}
+			items = append(items, n...)
 		}
 	case reflect.Slice:
 		if v.IsNil() {
@@ -192,8 +190,8 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 		if !v.Elem().IsValid() {
 			break
 		}
-		var n []Item
-		if n, err = s.notation(key, v.Elem(), true); err != nil {
+		n, err := s.notation(key, v.Elem(), true)
+		if err != nil {
 			return nil, err
 		}
 		if len(n) < 1 {
@@ -249,9 +247,7 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 	case reflect.Complex128:
 		value = v.Complex()
 		empty = reflect.Zero(v.Type()).Complex() == value
-	case reflect.Uintptr:
-		return nil, errors.New("squeezer:not implemented for " + v.Kind().String())
-	case reflect.Ptr, reflect.UnsafePointer:
+	case reflect.Uintptr, reflect.Ptr, reflect.UnsafePointer:
 		fallthrough
 	default:
 		return nil, errors.New("squeezer:not implemented for " + v.Kind().String())
@@ -272,7 +268,7 @@ func (s *Anvil) modify(v reflect.Value) (interface{}, bool, error) {
 	var err error
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("squeezer: %v on appendix call for type", r)
+			err = fmt.Errorf("squeezer: %v on appendix call", r)
 		}
 	}()
 	if fn, ok := s.modifier[v.Type().String()]; ok {
