@@ -42,6 +42,10 @@ type (
 		Float32 float32
 		Float64 float64
 	}
+	Complex struct {
+		Complex64  complex64
+		Complex128 complex128
+	}
 	MyType struct {
 		Embedded
 		unexported string
@@ -141,7 +145,6 @@ func TestAnvil_Notation_NoSkip(t *testing.T) {
 func TestAnvil_Notation_Skip(t *testing.T) {
 	s := "string_val"
 	clock := time.Now()
-	//id := uuid.MustParse("18bc60b8-17a1-4548-8471-73d30d240c99")
 	tr := true
 	fa := false
 	v := MyType{
@@ -160,7 +163,6 @@ func TestAnvil_Notation_Skip(t *testing.T) {
 			},
 		},
 		Time: clock,
-		//UUID: &id,
 	}
 	expected := []Item{
 		{Key: "MyType.Embedded.Boolean", Value: true},
@@ -208,7 +210,6 @@ func TestAnvil_Notation_Map_WithStringKeys(t *testing.T) {
 	v := Str{Map: m}
 
 	a := &Anvil{Mode: Skip, Glue: "."}
-	a.Modifier(time.Time{}, modifier.Time)
 
 	r, err := a.Notation(v)
 
@@ -234,7 +235,6 @@ func TestAnvil_Notation_Map_WithInt16Keys(t *testing.T) {
 	v := Str{Map: m}
 
 	a := &Anvil{Mode: Skip, Glue: "."}
-	a.Modifier(time.Time{}, modifier.Time)
 
 	r, err := a.Notation(v)
 
@@ -260,7 +260,6 @@ func TestAnvil_Notation_Map_WithUint8Keys(t *testing.T) {
 	v := Str{Map: m}
 
 	a := &Anvil{Mode: Skip, Glue: "."}
-	a.Modifier(time.Time{}, modifier.Time)
 
 	r, err := a.Notation(v)
 
@@ -286,7 +285,6 @@ func TestAnvil_Notation_Map_WithFloat64Keys(t *testing.T) {
 	v := Str{Map: m}
 
 	a := &Anvil{Mode: Skip, Glue: "."}
-	a.Modifier(time.Time{}, modifier.Time)
 
 	r, err := a.Notation(v)
 
@@ -312,7 +310,6 @@ func TestAnvil_Notation_Map_WithBoolKeys(t *testing.T) {
 	v := Str{MapBool: m}
 
 	a := &Anvil{Mode: Skip, Glue: "."}
-	a.Modifier(time.Time{}, modifier.Time)
 
 	r, err := a.Notation(v)
 
@@ -324,7 +321,7 @@ func TestAnvil_Notation_Map_WithBoolKeys(t *testing.T) {
 }
 
 // in case of not implemented types
-func TestAnvil_Notation_Map_WithNotImplementedKeysTypes_ExpectedEmptyKey(t *testing.T) {
+func TestNotation_Map_WithNotImplementedKeysTypes_ExpectedEmptyKey(t *testing.T) {
 	type Str struct {
 		MapBool map[struct{ T string }]string
 	}
@@ -338,10 +335,26 @@ func TestAnvil_Notation_Map_WithNotImplementedKeysTypes_ExpectedEmptyKey(t *test
 	}
 	v := Str{MapBool: m}
 
-	a := &Anvil{Mode: Skip, Glue: "."}
-	a.Modifier(time.Time{}, modifier.Time)
+	r, err := Notation(v, Skip, ".")
 
-	r, err := a.Notation(v)
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	check(t, expected, r)
+}
+
+func TestNotation_Complex(t *testing.T) {
+	v := Complex{
+		Complex64:  complex64(complex(.1, .0)),
+		Complex128: complex128(complex(.0, .1)), // must be skipped
+	}
+	expected := []Item{
+		{Key: "Complex.Complex64", Value: v.Complex64},
+		{Key: "Complex.Complex128", Value: v.Complex128},
+	}
+
+	r, err := Notation(v, Skip, ".")
 
 	if err != nil {
 		t.Error(err)
