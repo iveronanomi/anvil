@@ -148,6 +148,9 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 		if v.IsNil() {
 			break
 		}
+		if value, empty, err = s.modify(v); err != nil {
+			break
+		}
 		if v.Len() < 1 {
 			break
 		}
