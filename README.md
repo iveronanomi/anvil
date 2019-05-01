@@ -191,7 +191,7 @@ Item{Key:"Time", Value:"2019-04-23T10:44:56.534221+03:00"}
 |Type|Supported|Modifiers call|
 |---:|:---:|:---:|
 |`Array`|+|+|
-|`Slice`|+|-|
+|`Slice`|+|+|
 |`Struct`|+|+|
 |`Int`|+|-|
 |`Int8`|+|-|
@@ -207,10 +207,10 @@ Item{Key:"Time", Value:"2019-04-23T10:44:56.534221+03:00"}
 |`Uint64`|+|-|
 |`Bool`|+|-|
 |`String`|+|-|
-|`Interface`|-|-|
-|`Complex64`|-|-|
-|`Complex128`|-|-|
+|`Interface`|+|-|
+|`Complex64`|+|-|
+|`Complex128`|+|-|
+|`Map`|keys supported: Ints, Uints, Floats, Bool|-|
 |`Uintptr`|-|-|
-|`Map`|-|-|
 |`Ptr`|-|-|
 |`UnsafePointer`|-|-|
