@@ -86,6 +86,26 @@ func slicePrefix(key string, idx int) string {
 	return key + "[" + strconv.Itoa(idx) + "]"
 }
 
+// mapPrefix - make a notation prefix before map fields
+func mapPrefix(key string, idx reflect.Value) string {
+	var val string
+	switch idx.Kind() {
+	case reflect.String:
+		val = idx.String()
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		val = strconv.FormatInt(idx.Int(), 10)
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		val = strconv.FormatUint(idx.Uint(), 10)
+	case reflect.Float32:
+		val = strconv.FormatFloat(idx.Float(), 'f', -1, 32)
+	case reflect.Float64:
+		val = strconv.FormatFloat(idx.Float(), 'f', -1, 64)
+	case reflect.Bool:
+		val = strconv.FormatBool(idx.Bool())
+	}
+	return key + "[" + val + "]"
+}
+
 // notation structure nested
 func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item, err error) {
 	var (
@@ -209,7 +229,22 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 		value, empty = v.Bool(), !v.Bool()
 	case reflect.String:
 		value, empty = v.String(), len(v.String()) < 1
-	case reflect.Complex64, reflect.Complex128, reflect.Uintptr, reflect.Map:
+	case reflect.Map:
+		if v.IsNil() || v.Len() < 1 {
+			break
+		}
+		keys := v.MapKeys()
+		for i := range keys {
+			n, err := s.notation(mapPrefix(key, keys[i]), v.MapIndex(keys[i]), true)
+			if err != nil {
+				return nil, err
+			}
+			if len(n) < 1 {
+				continue
+			}
+			items = append(items, n...)
+		}
+	case reflect.Complex64, reflect.Complex128, reflect.Uintptr:
 		return nil, errors.New("squeezer:not implemented for " + v.Kind().String())
 	case reflect.Ptr, reflect.UnsafePointer:
 		fallthrough

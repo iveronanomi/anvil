@@ -193,6 +193,163 @@ func TestAnvil_Notation_Skip(t *testing.T) {
 	check(t, expected, r)
 }
 
+func TestAnvil_Notation_Map_WithStringKeys(t *testing.T) {
+	type Str struct {
+		Map map[string]string
+	}
+	m := map[string]string{
+		"One": "Uno",
+		"Two": "Dos",
+	}
+	expected := []Item{
+		{Key: "Str.Map[One]", Value: "Uno"},
+		{Key: "Str.Map[Two]", Value: "Dos"},
+	}
+	v := Str{Map: m}
+
+	a := &Anvil{Mode: Skip, Glue: "."}
+	a.Modifier(time.Time{}, modifier.Time)
+
+	r, err := a.Notation(v)
+
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	check(t, expected, r)
+}
+
+func TestAnvil_Notation_Map_WithInt16Keys(t *testing.T) {
+	type Str struct {
+		Map map[int16]string
+	}
+	m := map[int16]string{
+		-1: "One",
+		2:  "Two",
+	}
+	expected := []Item{
+		{Key: "Str.Map[-1]", Value: "One"},
+		{Key: "Str.Map[2]", Value: "Two"},
+	}
+	v := Str{Map: m}
+
+	a := &Anvil{Mode: Skip, Glue: "."}
+	a.Modifier(time.Time{}, modifier.Time)
+
+	r, err := a.Notation(v)
+
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	check(t, expected, r)
+}
+
+func TestAnvil_Notation_Map_WithUint8Keys(t *testing.T) {
+	type Str struct {
+		Map map[uint8]string
+	}
+	m := map[uint8]string{
+		1: "One",
+		2: "Two",
+	}
+	expected := []Item{
+		{Key: "Str.Map[1]", Value: "One"},
+		{Key: "Str.Map[2]", Value: "Two"},
+	}
+	v := Str{Map: m}
+
+	a := &Anvil{Mode: Skip, Glue: "."}
+	a.Modifier(time.Time{}, modifier.Time)
+
+	r, err := a.Notation(v)
+
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	check(t, expected, r)
+}
+
+func TestAnvil_Notation_Map_WithFloat64Keys(t *testing.T) {
+	type Str struct {
+		Map map[float64]string
+	}
+	m := map[float64]string{
+		.12345678901: "One",
+		-23456789.01: "Two",
+	}
+	expected := []Item{
+		{Key: "Str.Map[0.12345678901]", Value: "One"},
+		{Key: "Str.Map[-23456789.01]", Value: "Two"},
+	}
+	v := Str{Map: m}
+
+	a := &Anvil{Mode: Skip, Glue: "."}
+	a.Modifier(time.Time{}, modifier.Time)
+
+	r, err := a.Notation(v)
+
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	check(t, expected, r)
+}
+
+func TestAnvil_Notation_Map_WithBoolKeys(t *testing.T) {
+	type Str struct {
+		MapBool map[bool]string
+	}
+	expected := []Item{
+		{Key: "Str.MapBool[true]", Value: "Uno"},
+		{Key: "Str.MapBool[false]", Value: "Dos"},
+	}
+	m := map[bool]string{
+		true:  "Uno",
+		false: "Dos",
+	}
+	v := Str{MapBool: m}
+
+	a := &Anvil{Mode: Skip, Glue: "."}
+	a.Modifier(time.Time{}, modifier.Time)
+
+	r, err := a.Notation(v)
+
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	check(t, expected, r)
+}
+
+// in case of not implemented types
+func TestAnvil_Notation_Map_WithNotImplementedKeysTypes_ExpectedEmptyKey(t *testing.T) {
+	type Str struct {
+		MapBool map[struct{ T string }]string
+	}
+	expected := []Item{
+		{Key: "Str.MapBool[]", Value: "One"},
+		{Key: "Str.MapBool[]", Value: "Two"},
+	}
+	m := map[struct{ T string }]string{
+		struct{ T string }{T: "Uno"}: "One",
+		struct{ T string }{T: "Dos"}: "Two",
+	}
+	v := Str{MapBool: m}
+
+	a := &Anvil{Mode: Skip, Glue: "."}
+	a.Modifier(time.Time{}, modifier.Time)
+
+	r, err := a.Notation(v)
+
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	check(t, expected, r)
+}
+
 func check(t *testing.T, expected, occurred []Item) {
 	t.Helper()
 	var (
