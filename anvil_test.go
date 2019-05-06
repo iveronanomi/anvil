@@ -1,6 +1,7 @@
 package anvil
 
 import (
+	"reflect"
 	"testing"
 	"time"
 
@@ -57,6 +58,86 @@ type (
 		digits     Digits
 	}
 )
+
+func TestAnvil_Notation_WithEmptySample(t *testing.T) {
+	n, err := Notation(nil, SkipEmpty, ".")
+
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+
+	if len(n) > 0 {
+		t.Error("must be zero value for nil type")
+		t.FailNow()
+	}
+}
+
+func TestMapPrefix_WithIntKey(t *testing.T) {
+	i := int(1)
+	k := reflect.ValueOf(i)
+
+	pref := mapPrefix("", k)
+
+	if pref != "[1]" {
+		t.Error("invalid value of map prefix for int key value")
+	}
+}
+
+func TestMapPrefix_WithStringKey(t *testing.T) {
+	i := "key"
+	k := reflect.ValueOf(i)
+
+	pref := mapPrefix("", k)
+
+	if pref != "[key]" {
+		t.Error("invalid value of map prefix for string key value")
+	}
+}
+
+func TestMapPrefix_WithUintKey(t *testing.T) {
+	i := uint(2)
+	k := reflect.ValueOf(i)
+
+	pref := mapPrefix("", k)
+
+	if pref != "[2]" {
+		t.Error("invalid value of map prefix for string key value")
+	}
+}
+
+func TestMapPrefix_WithFloat32Key(t *testing.T) {
+	i := float32(.1)
+	k := reflect.ValueOf(i)
+
+	pref := mapPrefix("", k)
+
+	if pref != "[0.1]" {
+		t.Error("invalid value of map prefix for string key value")
+	}
+}
+
+func TestMapPrefix_WithFloat64Key(t *testing.T) {
+	i := float64(.2)
+	k := reflect.ValueOf(i)
+
+	pref := mapPrefix("", k)
+
+	if pref != "[0.2]" {
+		t.Error("invalid value of map prefix for string key value")
+	}
+}
+
+func TestMapPrefix_WithBool(t *testing.T) {
+	i := true
+	k := reflect.ValueOf(i)
+
+	pref := mapPrefix("", k)
+
+	if pref != "[true]" {
+		t.Error("invalid value of map prefix for string key value")
+	}
+}
 
 func TestAnvil_Notation_TimeModifier_ExpectedStringValue(t *testing.T) {
 	v := time.Now()

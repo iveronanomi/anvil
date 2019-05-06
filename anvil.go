@@ -17,24 +17,19 @@ type (
 		Mode mode
 		//Glue string to glue fields
 		Glue string
-		//sample of structure to make a notation
-		sample interface{}
-		// modifier it's a list of functions to use as a rule
-		// to find out empty or not empty value of a field with given type
+		// modifier it's a list of functions used as a rule
+		// to find out empty or not empty value of a field with given type and
+		// type representation
 		// exported type key as a key and list of functions to execute.
-		// functions executing in fifo order
 		modifier map[string]func(f reflect.Value) (interface{}, bool, error)
 		// collection of []{key => value}
 		items []Item
-		deep  int
+		deep  int // reserved for a future features
 	}
-	// Item field with typed value
-	// as result of notation
+	// Item field with typed value as a result of notation
 	Item struct {
 		Key   string
 		Value interface{}
-		//Kind  reflect.Kind
-		//Empty bool
 	}
 )
 
@@ -45,9 +40,9 @@ const (
 	SkipEmpty
 )
 
-// Modifier add function executor to extract value given type as
+// Modifier - assign a modifier function to extract value of given type as
 // result of callback function used (value, isEmpty, error) where
-// value is interface{} value to assign, isEmpty valuable for
+// value is interface{} value, isEmpty valuable for
 // behaviour Mode, and error if error occurred, used to stop execution
 func (s *Anvil) Modifier(t interface{}, call func(f reflect.Value) (interface{}, bool, error)) *Anvil {
 	if s.modifier == nil {
@@ -57,53 +52,27 @@ func (s *Anvil) Modifier(t interface{}, call func(f reflect.Value) (interface{},
 	return s
 }
 
-// Notation structure as a plain list of [][]interface{}
-// where k(string) = v(typed interface)
-func Notation(sample interface{}, behaviour mode, glue string) ([]Item, error) {
-	if sample == nil {
+// Notation of go type as a list of []Item
+// where key is a string and value is a typed interface value
+func Notation(source interface{}, behaviour mode, glue string) ([]Item, error) {
+	if source == nil {
 		return nil, nil
 	}
 	s := &Anvil{
-		sample:   sample,
 		Glue:     glue,
 		Mode:     behaviour,
 		modifier: make(map[string]func(f reflect.Value) (interface{}, bool, error)),
 	}
-	return s.notation("", reflect.ValueOf(sample), false)
+	return s.notation("", reflect.ValueOf(source), false)
 }
 
-// Notation make a notation of sample structure
-// with fields glued by separator in one row
+// Notation of go type as a list of []Item
+// where key is a string and value is a typed interface value
 func (s *Anvil) Notation(sample interface{}) ([]Item, error) {
 	if sample == nil {
 		return nil, nil
 	}
 	return s.notation("", reflect.ValueOf(sample), false)
-}
-
-// slicePrefix - make a notation prefix before slice fields
-func slicePrefix(key string, idx int) string {
-	return key + "[" + strconv.Itoa(idx) + "]"
-}
-
-// mapPrefix - make a notation prefix before map fields
-func mapPrefix(key string, idx reflect.Value) string {
-	var val string
-	switch idx.Kind() {
-	case reflect.String:
-		val = idx.String()
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		val = strconv.FormatInt(idx.Int(), 10)
-	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		val = strconv.FormatUint(idx.Uint(), 10)
-	case reflect.Float32:
-		val = strconv.FormatFloat(idx.Float(), 'f', -1, 32)
-	case reflect.Float64:
-		val = strconv.FormatFloat(idx.Float(), 'f', -1, 64)
-	case reflect.Bool:
-		val = strconv.FormatBool(idx.Bool())
-	}
-	return key + "[" + val + "]"
 }
 
 // notation structure nested
@@ -120,7 +89,6 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 	if len(key) < 1 {
 		key = v.Type().Name()
 	}
-	//fmt.Printf("switch: %d, %s\n", j, v.Kind())
 	switch v.Kind() {
 	case reflect.Invalid:
 		return nil, errors.New("squeezer:invalid value of " + v.Type().Name())
@@ -135,7 +103,7 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 			break
 		}
 		for i := 0; i < v.Len(); i++ {
-			n, err := s.notation(slicePrefix(key, i), v.Index(i), true)
+			n, err := s.notation(arrayPrefix(key, i), v.Index(i), true)
 			if err != nil {
 				return nil, err
 			}
@@ -156,7 +124,7 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 		}
 		for i := 0; i < v.Len(); i++ {
 			if v.Index(i).CanAddr() {
-				n, err := s.notation(slicePrefix(key, i), reflect.Indirect(v.Index(i).Addr()), true)
+				n, err := s.notation(arrayPrefix(key, i), reflect.Indirect(v.Index(i).Addr()), true)
 				if err != nil {
 					return nil, err
 				}
@@ -255,8 +223,6 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 	default:
 		return nil, errors.New("squeezer:not implemented for " + v.Kind().String())
 	}
-	//fmt.Printf("{idx}: %d:\n{key}: %s\n{value}: %v\n{items}: %v\n{skip}: %v\n{empty}: %v\n",
-	//	j, key, value, s.items, skip, empty)
 	if len(items) > 0 {
 		return items, err
 	}
@@ -266,7 +232,7 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 	return append(s.items, Item{Key: key, Value: value}), err
 }
 
-// call modifier fn if it possible
+// modify - call modifier function if presented for a given type
 func (s *Anvil) modify(v reflect.Value) (interface{}, bool, error) {
 	var err error
 	defer func() {
@@ -280,7 +246,7 @@ func (s *Anvil) modify(v reflect.Value) (interface{}, bool, error) {
 	return nil, true, err
 }
 
-// key of
+// key of field
 func (s *Anvil) key(pref string, v reflect.StructField, omit bool) string {
 	if omit {
 		return pref
@@ -299,4 +265,29 @@ func (s *Anvil) key(pref string, v reflect.StructField, omit bool) string {
 		title = v.Name
 	}
 	return pref + s.Glue + title
+}
+
+// arrayPrefix - make a notation prefix for a slice/array fields
+func arrayPrefix(pref string, idx int) string {
+	return pref + "[" + strconv.Itoa(idx) + "]"
+}
+
+// mapPrefix - make a notation prefix for a map fields
+func mapPrefix(pref string, idx reflect.Value) string {
+	var val string
+	switch idx.Kind() {
+	case reflect.String:
+		val = idx.String()
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		val = strconv.FormatInt(idx.Int(), 10)
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		val = strconv.FormatUint(idx.Uint(), 10)
+	case reflect.Float32:
+		val = strconv.FormatFloat(idx.Float(), 'f', -1, 32)
+	case reflect.Float64:
+		val = strconv.FormatFloat(idx.Float(), 'f', -1, 64)
+	case reflect.Bool:
+		val = strconv.FormatBool(idx.Bool())
+	}
+	return pref + "[" + val + "]"
 }
