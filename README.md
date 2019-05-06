@@ -8,10 +8,10 @@
 
 What is going on here?
 Two main params used to make a notation from a type:
-- `Glue` as glue for notation
+- `Glue` as a glue for notation
 - `Mode` as a mode for skipping empty values of a type.
-	- `anvil.Skip` - skip empty values of type
-	- `anvil.NoSkip` - do not skip empty values
+	- `anvil.SkipEmpty` - skip empty values of type
+	- `anvil.NoSkipEmpty` - do not skip empty values of type
 
 In case of structure field have a `json` tag name - tag used as a name for a field in notation
 
