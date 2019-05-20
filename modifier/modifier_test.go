@@ -35,7 +35,7 @@ func Test_TimeMod_WithZeroTime(t *testing.T) {
 	val, empty, err := Time(v)
 
 	if err != nil {
-		t.Errorf("`err` must be a <nil>, occured `%v`", err)
+		t.Errorf("`err` must be a <nil>, occureed `%v`", err)
 	}
 	if val != expectedVal {
 		t.Errorf("`val` must be `%v` for zero time value", expectedVal)

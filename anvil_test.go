@@ -129,8 +129,7 @@ func TestMapPrefix_WithFloat64Key(t *testing.T) {
 }
 
 func TestMapPrefix_WithBool(t *testing.T) {
-	i := true
-	k := reflect.ValueOf(i)
+	k := reflect.ValueOf(true)
 
 	pref := mapPrefix("", k)
 
