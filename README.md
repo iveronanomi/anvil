@@ -218,5 +218,6 @@ Item{Key:"Time", Value:"2019-04-23T10:44:56.534221+03:00"}
 
 
 ### TODO Features
-- unmarshal notation to type
-- marshal notation to type
+- unmarshal notation to type interface
+- marshal type to notation interface
+- codegeneration for unmarshal
