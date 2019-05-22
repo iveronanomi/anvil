@@ -5,6 +5,7 @@
   - [As an anvil instance](#usage-as-an-anvil-instance)
   - [As package static call](#usage-as-package-static-call)
 - [Modifier usage](#modifier-usage)
+- [TODO features](#todo-features)
 
 What is going on here?
 Two main params used to make a notation from a type:
@@ -214,3 +215,8 @@ Item{Key:"Time", Value:"2019-04-23T10:44:56.534221+03:00"}
 |`Uintptr`|-|-|
 |`Ptr`|-|-|
 |`UnsafePointer`|-|-|
+
+
+### TODO Features
+- unmarshal notation to type
+- marshal notation to type
