@@ -51,7 +51,7 @@ type (
 		Embedded
 		unexported string
 		Pointer    *string
-		Json       int8 `json:"json_tag"`
+		JSON       int8 `json:"json_tag"`
 		PointerStr *PointerStr
 		Time       time.Time
 		Face       IFace `json:"-,"`
@@ -165,7 +165,7 @@ func TestAnvil_Notation_NoSkip(t *testing.T) {
 		},
 		unexported: s, // todo: check `json` tag behaviors
 		Pointer:    &s,
-		Json:       1,
+		JSON:       1,
 		PointerStr: &PointerStr{
 			F1: f1,
 			F2: []Sliced{},
@@ -233,7 +233,7 @@ func TestAnvil_Notation_Skip(t *testing.T) {
 		},
 		unexported: s,
 		Pointer:    &s,
-		Json:       1,
+		JSON:       1,
 		PointerStr: &PointerStr{
 			F1: []string{"", "two", " "},
 			F2: []Sliced{
@@ -248,7 +248,7 @@ func TestAnvil_Notation_Skip(t *testing.T) {
 		{Key: "MyType.Embedded.Boolean", Value: true},
 		{Key: "MyType.unexported", Value: v.unexported},
 		{Key: "MyType.Pointer", Value: *v.Pointer},
-		{Key: "MyType.json_tag", Value: v.Json},
+		{Key: "MyType.json_tag", Value: v.JSON},
 		{Key: "MyType.PointerStr.F1[1]", Value: v.PointerStr.F1[1]},
 		{Key: "MyType.PointerStr.F1[2]", Value: v.PointerStr.F1[2]},
 		{Key: "MyType.PointerStr.F2[0].Key", Value: v.PointerStr.F2[0].Key},
