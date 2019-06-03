@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/iveronanomi/anvil.svg?branch=master)](https://travis-ci.org/iveronanomi/anvil) [![Coverage Status](https://coveralls.io/repos/github/iveronanomi/anvil/badge.svg)](https://coveralls.io/github/iveronanomi/anvil) [![Go Report Card](https://goreportcard.com/badge/github.com/src-d/go-git)](https://goreportcard.com/report/github.com/src-d/go-git)
+[![Build Status](https://travis-ci.org/iveronanomi/anvil.svg?branch=master)](https://travis-ci.org/iveronanomi/anvil) [![Coverage Status](https://coveralls.io/repos/github/iveronanomi/anvil/badge.svg)](https://coveralls.io/github/iveronanomi/anvil) [![Go Report Card](https://goreportcard.com/badge/github.com/src-d/go-git)](https://goreportcard.com/report/github.com/src-d/go-git) [![GoDoc](https://godoc.org/github.com/iveronanomi/anvil?status.svg)](https://godoc.org/github.com/iveronanomi/anvil)
 
 # Anvil - Dot notation from Go type instance
 - [Usage](#usage)
