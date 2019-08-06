@@ -14,7 +14,7 @@ func BenchmarkNotation_WithNoSkip(b *testing.B) {
 	var r interface{}
 	v := MyType{}
 	a := Anvil{Mode: NoSkipEmpty, Glue: "."}
-	a.Modifier(v, modifier.Time)
+	a.RegisterModifierFunc(v, modifier.Time)
 
 	for n := 0; n < b.N; n++ {
 		r, _ = a.Notation(v)
@@ -27,7 +27,7 @@ func BenchmarkNotation_WithForceSkip(b *testing.B) {
 	var r interface{}
 	v := MyType{}
 	a := &Anvil{Mode: SkipEmpty, Glue: "."}
-	a.Modifier(v, modifier.Time)
+	a.RegisterModifierFunc(v, modifier.Time)
 
 	for n := 0; n < b.N; n++ {
 		r, _ = a.Notation(v)

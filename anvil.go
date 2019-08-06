@@ -40,11 +40,12 @@ const (
 	SkipEmpty
 )
 
-// Modifier - assign a modifier function to extract value of given type as
+// RegisterModifierFunc - assign a modifier function
+// to extract value of given type as
 // result of callback function used (value, isEmpty, error) where
-// value is interface{} value, isEmpty valuable for
+// value is an interface{} value, isEmpty - valuable for
 // behaviour Mode, and error if error occurred, used to stop execution
-func (s *Anvil) Modifier(t interface{}, call func(f reflect.Value) (interface{}, bool, error)) *Anvil {
+func (s *Anvil) RegisterModifierFunc(t interface{}, call func(f reflect.Value) (interface{}, bool, error)) *Anvil {
 	if s.modifier == nil {
 		s.modifier = make(map[string]func(f reflect.Value) (interface{}, bool, error))
 	}
