@@ -45,11 +45,11 @@ const (
 // result of callback function used (value, isEmpty, error) where
 // value is an interface{} value, isEmpty - valuable for
 // behaviour Mode, and error if error occurred, used to stop execution
-func (s *Anvil) RegisterModifierFunc(t interface{}, call func(f reflect.Value) (interface{}, bool, error)) *Anvil {
+func (s *Anvil) RegisterModifierFunc(t interface{}, mod func(f reflect.Value) (interface{}, bool, error)) *Anvil {
 	if s.modifier == nil {
 		s.modifier = make(map[string]func(f reflect.Value) (interface{}, bool, error))
 	}
-	s.modifier[reflect.TypeOf(t).String()] = call
+	s.modifier[reflect.TypeOf(t).String()] = mod
 	return s
 }
 
@@ -92,7 +92,7 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 	}
 	switch v.Kind() {
 	case reflect.Invalid:
-		return nil, errors.New("squeezer:invalid value of " + v.Type().Name())
+		return nil, errors.New("anvil:invalid value of " + v.Type().Name())
 	case reflect.Array:
 		if v.Len() < 1 {
 			break
@@ -222,7 +222,7 @@ func (s *Anvil) notation(key string, v reflect.Value, title bool) (items []Item,
 	case reflect.Uintptr, reflect.Ptr, reflect.UnsafePointer:
 		fallthrough
 	default:
-		return nil, errors.New("squeezer:not implemented for " + v.Kind().String())
+		return nil, errors.New("anvil:not implemented for " + v.Kind().String())
 	}
 	if len(items) > 0 {
 		return items, err
@@ -238,7 +238,7 @@ func (s *Anvil) modify(v reflect.Value) (interface{}, bool, error) {
 	var err error
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("squeezer: %v on appendix call", r)
+			err = fmt.Errorf("anvil: %v on appendix call", r)
 		}
 	}()
 	if fn, ok := s.modifier[v.Type().String()]; ok {
