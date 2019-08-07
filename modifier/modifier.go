@@ -33,7 +33,7 @@ var (
 		return value, empty, err
 	}
 
-	// Time as example of representation build in time.Time type as string
+	// Time as example of representation builtin time.Time type as string
 	Time = func(v reflect.Value) (interface{}, bool, error) {
 		var (
 			value  string
@@ -52,5 +52,15 @@ var (
 			return value, true, errors.New("modifier:method Format not implemented")
 		}
 		return value, empty, err
+	}
+
+	// String as example of representation as stringer interface
+	String = func(v reflect.Value) (interface{}, bool, error) {
+		var value string
+		if m, ok := v.Type().MethodByName("String"); ok && m.Func.Type().NumIn() == 1 {
+			value = m.Func.Call([]reflect.Value{v})[0].String()
+			return value, len(value) < 1, nil
+		}
+		return value, true, errors.New("modifier:method String not implemented")
 	}
 )

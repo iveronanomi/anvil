@@ -204,3 +204,24 @@ func Test_UUIDMod_WithNotImplementedStringMethod(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+type hasStringerMethod struct{}
+
+func (t hasStringerMethod) String() string { return "hello" }
+
+func Test_StringerMod(t *testing.T) {
+	v := reflect.ValueOf(hasStringerMethod{})
+	expectedVal := "hello"
+
+	val, empty, err := String(v)
+
+	if err != nil {
+		t.Errorf("expected no errors, but get %v", err)
+	}
+	if empty {
+		t.Errorf("must be not empty")
+	}
+	if val != expectedVal {
+		t.Errorf("`val` must be equal to `%v`, but got `%v`", expectedVal, val)
+	}
+}
