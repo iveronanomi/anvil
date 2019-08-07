@@ -6,6 +6,8 @@ package anvil_test
 
 import (
 	"fmt"
+	"github.com/iveronanomi/anvil/modifier"
+	"time"
 
 	"github.com/iveronanomi/anvil"
 )
@@ -114,9 +116,9 @@ func ExampleAnvil_Notation_map() {
 		"One": "Uno",
 		"Two": "Dos",
 	}
-	do := &anvil.Anvil{Mode: anvil.SkipEmpty, Glue: "."}
+	squeezer := &anvil.Anvil{Mode: anvil.SkipEmpty, Glue: "."}
 
-	items, _ := do.Notation(source)
+	items, _ := squeezer.Notation(source)
 
 	for i := range items {
 		fmt.Printf("%#v\n", items[i])
@@ -124,4 +126,32 @@ func ExampleAnvil_Notation_map() {
 	// Output:
 	// anvil.Item{Key:"[One]", Value:"Uno"}
 	// anvil.Item{Key:"[Two]", Value:"Dos"}
+}
+
+type DateRange struct {
+	Range map[string]time.Time
+}
+
+// ExampleAnvil_RegisterModifierFunc describes how to use modifiers to change behavior of types representation
+func ExampleAnvil_RegisterModifierFunc() {
+	t1, _ := time.Parse(time.Kitchen, "1:01AM")
+	source := DateRange{
+		Range: map[string]time.Time{
+			"date_1": t1,
+			"date_2": t1.Add(-time.Minute),
+		},
+	}
+
+	squeezer := &anvil.Anvil{Mode: anvil.SkipEmpty, Glue: "."}
+
+	items, _ := squeezer.
+		RegisterModifierFunc(time.Time{}, modifier.Time).
+		Notation(source)
+
+	for i := range items {
+		fmt.Printf("%#v\n", items[i])
+	}
+	// Output:
+	// anvil.Item{Key:"DateRange.Range[date_1]", Value:"0000-01-01T01:01:00Z"}
+	// anvil.Item{Key:"DateRange.Range[date_2]", Value:"0000-01-01T01:00:00Z"}
 }
