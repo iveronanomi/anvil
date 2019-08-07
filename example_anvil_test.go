@@ -6,122 +6,122 @@ package anvil_test
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/iveronanomi/anvil"
 )
 
 type (
-	IFace interface {
-		Name() interface{}
-		Complex128() complex128
-	}
-	Embedded struct {
-		Boolean bool
-	}
-	Sliced struct {
-		Key   string
-		Value interface{}
-		Bool  *bool
-	}
-	PointerStr struct {
-		F1 []string
-		F2 []Sliced
-	}
-	Nested struct {
-		*Nested
-	}
-	Digits struct {
-		Int     int
-		Int8    int8
-		Int16   int16
-		Int32   int32
-		Int64   int64
-		Uint    uint `json:"zero"`
-		Uint8   uint8
-		Uint16  uint16
-		Uint32  uint32
-		Uint64  uint64
-		Float32 float32
-		Float64 float64
-	}
-	Test struct {
-		Embedded
-		unexported string
-		Pointer    *string
-		Json       int8 `json:"json_tag"`
-		PointerStr *PointerStr
-		Time       time.Time
-		Face       IFace `json:"-,"`
-		digits     Digits
+	SolarSystem []Planet
+	Planet      struct {
+		Name  string `json:"name"`
+		mass  float32
+		rings bool
+		moons int8
 	}
 )
 
-// ExampleNotation_with_SkipEmpty demonstrates a technique
+// ExampleNotation_noSkipEmpty demonstrates a technique
 // for make notation from structure without empty values
-func ExampleNotation_with_SkipEmpty() {
-	v := Test{
-		Embedded: Embedded{
-			Boolean: true,
+func ExampleNotation_noSkipEmpty() {
+	source := SolarSystem{
+		{
+			Name: "Mercury",
+			mass: .0553,
 		},
-		unexported: "string_val",
-		Json:       1,
-		PointerStr: &PointerStr{
-			F2: []Sliced{},
+		{
+			Name: "Venus",
+			mass: .815,
 		},
-		digits: Digits{
-			Int8:    -1,
-			Int16:   -16,
-			Int32:   -32,
-			Int64:   -64,
-			Uint8:   8,
-			Uint16:  16,
-			Uint32:  32,
-			Uint64:  64,
-			Float32: .32,
-			Float64: -.64,
+		{
+			Name:  "Earth",
+			mass:  1,
+			moons: 1,
+		},
+		{
+			Name:  "Mars",
+			mass:  .11,
+			moons: 2,
+		},
+		{
+			Name:  "Jupiter",
+			mass:  317.8,
+			rings: true,
+			moons: 79,
+		},
+		{
+			Name:  "Saturn",
+			mass:  95.2,
+			rings: true,
+			moons: 62,
+		},
+		{
+			Name:  "Uranus",
+			mass:  14.6,
+			rings: true,
+			moons: 27,
+		},
+		{
+			Name:  "Neptune",
+			mass:  17.2,
+			rings: true,
+			moons: 14,
 		},
 	}
-	items, _ := anvil.Notation(v, anvil.SkipEmpty, ".")
+	items, _ := anvil.Notation(source, anvil.NoSkipEmpty, ".")
 
 	for i := range items {
-		fmt.Printf("%v\n", items[i])
+		fmt.Printf("%#v\n", items[i])
 	}
 	// Output:
-	// {Test.Embedded.Boolean true}
-	// {Test.unexported string_val}
-	// {Test.json_tag 1}
-	// {Test.digits.Int8 -1}
-	// {Test.digits.Int16 -16}
-	// {Test.digits.Int32 -32}
-	// {Test.digits.Int64 -64}
-	// {Test.digits.Uint8 8}
-	// {Test.digits.Uint16 16}
-	// {Test.digits.Uint32 32}
-	// {Test.digits.Uint64 64}
-	// {Test.digits.Float32 0.32}
-	// {Test.digits.Float64 -0.64}
+	// anvil.Item{Key:"SolarSystem[0].name", Value:"Mercury"}
+	// anvil.Item{Key:"SolarSystem[0].mass", Value:0.0553}
+	// anvil.Item{Key:"SolarSystem[0].rings", Value:false}
+	// anvil.Item{Key:"SolarSystem[0].moons", Value:0}
+	// anvil.Item{Key:"SolarSystem[1].name", Value:"Venus"}
+	// anvil.Item{Key:"SolarSystem[1].mass", Value:0.815}
+	// anvil.Item{Key:"SolarSystem[1].rings", Value:false}
+	// anvil.Item{Key:"SolarSystem[1].moons", Value:0}
+	// anvil.Item{Key:"SolarSystem[2].name", Value:"Earth"}
+	// anvil.Item{Key:"SolarSystem[2].mass", Value:1}
+	// anvil.Item{Key:"SolarSystem[2].rings", Value:false}
+	// anvil.Item{Key:"SolarSystem[2].moons", Value:1}
+	// anvil.Item{Key:"SolarSystem[3].name", Value:"Mars"}
+	// anvil.Item{Key:"SolarSystem[3].mass", Value:0.11}
+	// anvil.Item{Key:"SolarSystem[3].rings", Value:false}
+	// anvil.Item{Key:"SolarSystem[3].moons", Value:2}
+	// anvil.Item{Key:"SolarSystem[4].name", Value:"Jupiter"}
+	// anvil.Item{Key:"SolarSystem[4].mass", Value:317.8}
+	// anvil.Item{Key:"SolarSystem[4].rings", Value:true}
+	// anvil.Item{Key:"SolarSystem[4].moons", Value:79}
+	// anvil.Item{Key:"SolarSystem[5].name", Value:"Saturn"}
+	// anvil.Item{Key:"SolarSystem[5].mass", Value:95.2}
+	// anvil.Item{Key:"SolarSystem[5].rings", Value:true}
+	// anvil.Item{Key:"SolarSystem[5].moons", Value:62}
+	// anvil.Item{Key:"SolarSystem[6].name", Value:"Uranus"}
+	// anvil.Item{Key:"SolarSystem[6].mass", Value:14.6}
+	// anvil.Item{Key:"SolarSystem[6].rings", Value:true}
+	// anvil.Item{Key:"SolarSystem[6].moons", Value:27}
+	// anvil.Item{Key:"SolarSystem[7].name", Value:"Neptune"}
+	// anvil.Item{Key:"SolarSystem[7].mass", Value:17.2}
+	// anvil.Item{Key:"SolarSystem[7].rings", Value:true}
+	// anvil.Item{Key:"SolarSystem[7].moons", Value:14}
 }
 
-func ExampleAnvil_Notation_map_string_keys() {
-	type Str struct {
-		Map map[string]string
-	}
-	m := map[string]string{
+// ExampleAnvil_Notation_map demonstrates a technique
+// for make notation from map
+func ExampleAnvil_Notation_map() {
+	source := map[string]string{
 		"One": "Uno",
 		"Two": "Dos",
 	}
+	do := &anvil.Anvil{Mode: anvil.SkipEmpty, Glue: "."}
 
-	v := Str{Map: m}
+	items, _ := do.Notation(source)
 
-	a := &anvil.Anvil{Mode: anvil.SkipEmpty, Glue: "."}
-
-	r, _ := a.Notation(v)
-
-	for i := range r {
-		fmt.Println(r[i])
+	for i := range items {
+		fmt.Printf("%#v\n", items[i])
 	}
-	// Unordered output:
-	// {Str.Map[One] Uno}
-	// {Str.Map[Two] Dos}
+	// Output:
+	// anvil.Item{Key:"[One]", Value:"Uno"}
+	// anvil.Item{Key:"[Two]", Value:"Dos"}
 }
