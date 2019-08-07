@@ -6,10 +6,10 @@ package anvil_test
 
 import (
 	"fmt"
-	"github.com/iveronanomi/anvil/modifier"
 	"time"
 
 	"github.com/iveronanomi/anvil"
+	"github.com/iveronanomi/anvil/modifier"
 )
 
 type (
