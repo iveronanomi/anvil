@@ -26,7 +26,7 @@ func (p Drink) String() string {
 }
 
 // This example demonstrates how to transmits a structure with stringer interface to string with a String modifier
-func Example_with_string_modifier() {
+func Example_string_modifier() {
 	// bunch of drinks as data example
 	data := Drinks{
 		{
