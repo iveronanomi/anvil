@@ -26,7 +26,7 @@ func (p Drink) String() string {
 }
 
 // This example demonstrates how to transmits a structure with stringer interface to string with a String modifier
-func Example_string_modifier() {
+func Example_stringModifier() {
 	// bunch of drinks as data example
 	data := Drinks{
 		{
@@ -45,9 +45,10 @@ func Example_string_modifier() {
 	items, _ := do.Notation(data)
 
 	for i := range items {
-		fmt.Printf("%#v\n", items[i])
+		fmt.Printf("%v\n", items[i])
 	}
+
 	// Output:
-	// anvil.Item{Key:"Drinks[0]", Value:"Tea is a good drink."}
-	// anvil.Item{Key:"Drinks[1]", Value:"Coffee is a good drink."}
+	// {Drinks[0] Tea is a good drink.}
+	// {Drinks[1] Coffee is a good drink.}
 }
